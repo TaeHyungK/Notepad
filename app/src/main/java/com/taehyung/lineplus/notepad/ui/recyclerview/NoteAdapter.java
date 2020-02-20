@@ -1,6 +1,7 @@
 package com.taehyung.lineplus.notepad.ui.recyclerview;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,9 +47,16 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         Log.d(TAG, "onBindViewHolder() called. position: " + position);
         if (!Utils.isListEmpty(mNotes)) {
             Note curNote = mNotes.get(position);
-            Log.d(TAG, "onBindViewHolder() curNote: " + curNote.getTitle() + " | " + curNote.getDesc());
-            // TODO 썸네일 이미지 바인드 처리
-//            holder.mImageView.setImageResource();
+            Log.d(TAG, "onBindViewHolder() curNote: " + curNote.getTitle() + " | " + curNote.getDesc() + " | " + curNote.getImages());
+
+            if (!Utils.isListEmpty(curNote.getImages())) {
+                byte[] byteImage = curNote.getImages().get(0);
+
+                Bitmap bitmap = Utils.byteArrayToBitmap(byteImage);
+                if (bitmap != null) {
+                    holder.mImageView.setImageBitmap(bitmap);
+                }
+            }
             holder.mTitle.setText(curNote.getTitle());
             holder.mDesc.setText(curNote.getDesc());
 

@@ -144,7 +144,7 @@ public class EditActivity extends AppCompatActivity {
      * @return true - save 가능, false - save 불가 (누락된 내용 있을 경우)
      */
     private boolean saveBtn() {
-        // FIXME 이미지와 함께 저장 시 앱 죽음.. 확인 필요.. buffer overflow..?
+        Log.d(TAG, "saveBtn() called. ");
         String guide = null;
         if (TextUtils.isEmpty(mTitleEdit.getText())) {
             guide = getString(R.string.note_add_cant_save_no_title_guide);
