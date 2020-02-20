@@ -55,10 +55,38 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/d_select_image_gallery"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/d_select_image_url_edit"
             android:textSize="15sp"
             android:text="@string/dialog_select_image_url"
             />
+
+        <EditText
+            android:id="@+id/d_select_image_url_edit"
+            android:layout_width="@dimen/dialog_button_width"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/d_select_image_url"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/d_select_image_url_edit_confirm"
+            android:textSize="15sp"
+            android:hint="@string/dialog_select_image_url_edit"
+            android:maxLines="1"
+            android:visibility="gone"
+            />
+
+        <Button
+            android:id="@+id/d_select_image_url_edit_confirm"
+            android:layout_width="@dimen/dialog_button_width"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/d_select_image_url_edit"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="15sp"
+            android:text="@string/dialog_select_image_url_edit_confirm"
+            android:visibility="gone"
+            />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -43,9 +43,17 @@ public class Utils {
             Log.d(TAG, "bitmapToByteArray() bitmap is null. do nothing.");
             return null;
         }
-        ByteArrayOutputStream baos = new ByteArrayOutputStream() ;
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos) ;
-        byte[] byteArray = baos.toByteArray() ;
+
+        byte[] byteArray = null;
+
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byteArray = baos.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return byteArray ;
     }
 
@@ -55,7 +63,14 @@ public class Utils {
             return null;
         }
 
-        Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        Bitmap bitmap = null;
+
+        try {
+            bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return bitmap;
     }
 }

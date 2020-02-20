@@ -21,6 +21,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.taehyung.lineplus.notepad.data.DataConst;
 import com.taehyung.lineplus.notepad.data.db.Note;
 import com.taehyung.lineplus.notepad.ui.dialog.CustomDialog;
@@ -68,7 +71,6 @@ public class EditActivity extends AppCompatActivity {
 
     private void initLayout(Intent intent) {
         // Add 이미지 추가 Button
-        // FIXME LinearLayout으로 바꾸고 나서 버튼이 추가가 안됨.. 확인 필요 ㅠㅠ..
         mAddImgBtn = new Button(this);
         mAddImgBtn.setLayoutParams(new LinearLayout.LayoutParams(Utils.changeDP2Pixel(100), Utils.changeDP2Pixel(100)));
         mAddImgBtn.setText(getString(R.string.note_add_image_add));
@@ -77,7 +79,6 @@ public class EditActivity extends AppCompatActivity {
         mAddImgBtn.setOnClickListener(view -> {
             if (mDialog == null) {
                 mDialog = new CustomDialog(EditActivity.this, mDialogClickListener);
-                mDialog.setCancelable(true);
             }
             mDialog.show();
         });
@@ -143,7 +144,7 @@ public class EditActivity extends AppCompatActivity {
         }
 
         if (guide != null) {
-            Toast.makeText(getBaseContext(), guide, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), guide, Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -172,7 +173,7 @@ public class EditActivity extends AppCompatActivity {
     /**
      * 이미지 유무에 따른 이미지 영역 Layout 셋팅
      *
-     * @param images ArrayList<String> // TODO 정해진 타입으로 수정 필요
+     * @param images ArrayList<byte[]>
      */
     private void setImageLayout(ArrayList<byte[]> images) {
         boolean hasImages = !Utils.isListEmpty(images);
@@ -191,6 +192,7 @@ public class EditActivity extends AppCompatActivity {
      * 이미지 추가 처리
      */
     private void addImage(Bitmap bitmap) {
+        Log.d(TAG, "addImage() called. bitmap: " + bitmap);
         ImageView imageView = new ImageView(this);
         imageView.setLayoutParams(new ConstraintLayout.LayoutParams(Utils.changeDP2Pixel(100), Utils.changeDP2Pixel(100)));
         imageView.setImageBitmap(bitmap);
@@ -222,10 +224,36 @@ public class EditActivity extends AppCompatActivity {
                 startActivityForResult(intent, DataConst.DIALOG_SELECT_IMAGE_TYPE.GALLERY);
                 break;
             case R.id.d_select_image_url:
-                if (mDialog != null && mDialog.isShowing()) {
-                    mDialog.dismiss();
+                mDialog.switchUrlEdit(!mDialog.isUrlEditShowing());
+                break;
+            case R.id.d_select_image_url_edit_confirm:
+                if (mDialog.isUrlEditShowing()) {
+                    String url = mDialog.getUrlString();
+
+                    Log.d(TAG, "mDialogClickListener URL_CONFIRM_BTN url: " + url);
+
+                    // FIXME url로 이미지 불러오는 것 안됨.. 수정 필요...
+                    if (url != null) {
+                        Glide.with(getApplicationContext())
+                                .asBitmap()
+                                .load(url)
+                                .into(new SimpleTarget<Bitmap>() {
+                                    @Override
+                                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                        byte[] byteArray = Utils.bitmapToByteArray(resource);
+
+                                        if (byteArray != null) {
+                                            mImageList.add(byteArray);
+                                        }
+
+                                        addImage(resource);
+                                    }
+                                });
+                    } else {
+                        String guide = getString(R.string.dialog_cant_load_url_image);
+                        Toast.makeText(getApplicationContext(), guide, Toast.LENGTH_SHORT).show();
+                    }
                 }
-                // TODO url 입력할 수 있는 팝업 노출
                 break;
         }
     };
@@ -268,10 +296,8 @@ public class EditActivity extends AppCompatActivity {
                             addImage(bitmap);
                         }
                     } catch (FileNotFoundException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     } catch (IOException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     } catch (OutOfMemoryError e) {
                         Toast.makeText(getApplicationContext(), "이미지 용량이 너무 큽니다.", Toast.LENGTH_SHORT).show();
