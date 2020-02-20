@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- view setTag key id -->
+    <attr name="key_note_holder" format="reference" />
+    <attr name="key_note_db_id" format="integer" />
+    <attr name="key_add_image" format="integer" />
+</resources>

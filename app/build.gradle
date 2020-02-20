@@ -1,0 +1,54 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+    defaultConfig {
+        applicationId "com.taehyung.lineplus.notepad"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    def roomVersion = '2.2.2'
+    def recyclerview_version = '1.1.0'
+    def material_version = '1.0.0'
+    def lifecycle_version = '2.1.0'
+    def gson_version = '2.8.6'
+    def glide_version = '4.11.0'
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
+    implementation "android.arch.persistence.room:runtime:$roomVersion"
+    annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
+    testImplementation "android.arch.persistence.room:testing:$roomVersion"
+
+    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+
+    implementation "com.google.android.material:material:$material_version"
+    implementation "com.google.code.gson:gson:$gson_version"
+
+    // bumptech - image load library (https://github.com/bumptech/glide)
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+}
