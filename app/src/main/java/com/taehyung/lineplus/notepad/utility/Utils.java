@@ -43,9 +43,9 @@ public class Utils {
             Log.d(TAG, "bitmapToByteArray() bitmap is null. do nothing.");
             return null;
         }
-        ByteArrayOutputStream stream = new ByteArrayOutputStream() ;
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream) ;
-        byte[] byteArray = stream.toByteArray() ;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream() ;
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos) ;
+        byte[] byteArray = baos.toByteArray() ;
         return byteArray ;
     }
 
@@ -58,59 +58,4 @@ public class Utils {
         Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
         return bitmap;
     }
-
-    public static String bitmapToBase64(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        String base64 = null;
-
-        try {
-            // convert stream
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            // convert byte array
-            byte[] bImage = baos.toByteArray();
-            // convert base64
-            base64 = Base64.encodeToString(bImage, 0);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (baos != null) {
-                try {
-                    baos.close();
-                } catch (IOException ioe) {
-                    ioe.printStackTrace();
-                }
-            }
-        }
-
-        return base64;
-    }
-
-    public static Bitmap base64ToBitmap(String base64) {
-        Bitmap bitmap = null;
-        ByteArrayInputStream bais = null;
-
-        try {
-            // convert base64
-            byte[] bImage = Base64.decode(base64, 0);
-            // convert stream
-            bais = new ByteArrayInputStream(bImage);
-            // convert image
-            bitmap = BitmapFactory.decodeStream(bais);
-
-            bais.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (bais != null) {
-                try {
-                    bais.close();
-                } catch (IOException ioe) {
-                    ioe.printStackTrace();
-                }
-            }
-        }
-
-        return bitmap;
-    }
-
 }

@@ -22,7 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.taehyung.lineplus.notepad.data.DataConst;
-import com.taehyung.lineplus.notepad.data.db.ImageWrapper;
 import com.taehyung.lineplus.notepad.data.db.Note;
 import com.taehyung.lineplus.notepad.ui.dialog.CustomDialog;
 import com.taehyung.lineplus.notepad.utility.Utils;
@@ -56,8 +55,6 @@ public class EditActivity extends AppCompatActivity {
         mTitleEdit = findViewById(R.id.activity_edit_title_edit);
         mDescEdit = findViewById(R.id.activity_edit_desc_edit);
         mImageContainer = findViewById(R.id.activity_edit_image_container);
-
-        mImageList = new ArrayList<byte[]>();
 
         initLayout(getIntent());
     }
@@ -104,22 +101,15 @@ public class EditActivity extends AppCompatActivity {
                         mCurNote = (Note) bundle.getSerializable(DataConst.NOTE_EXTRA.EXTRA_NOTE_DATA);
                         mTitleEdit.setText(mCurNote.getTitle());
                         mDescEdit.setText(mCurNote.getDesc());
-
-//                        ArrayList<byte[]> byteImages = mCurNote.getImages();
-//                        if (Utils.isListEmpty(byteImages)) {
-//                            for (byte[] byteImage : byteImages) {
-//                                Bitmap bitmap = Utils.byteArrayToBitmap(byteImage);
-//
-//                                if (bitmap != null) {
-//                                    mImageList.add(bitmap);
-//                                }
-//                            }
-//                        }
                         mImageList = mCurNote.getImages();
                         setImageLayout(mImageList);
                     }
                     break;
             }
+        }
+
+        if (Utils.isListEmpty(mImageList)) {
+            mImageList = new ArrayList<>();
         }
     }
 
@@ -287,7 +277,6 @@ public class EditActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "이미지 용량이 너무 큽니다.", Toast.LENGTH_SHORT).show();
                     }
                     break;
-
                 case DataConst.DIALOG_SELECT_IMAGE_TYPE.URL:
                     // TODO glide 이용해서 URL 이미지 가져와서 셋팅 처리
 
