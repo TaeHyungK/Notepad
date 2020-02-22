@@ -22,7 +22,12 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.Request;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.taehyung.lineplus.notepad.data.DataConst;
 import com.taehyung.lineplus.notepad.data.db.Note;
@@ -41,7 +46,7 @@ public class EditActivity extends AppCompatActivity {
 
     private String mType;
     private Note mCurNote;
-    private ArrayList<byte[]> mImageList;
+    private ArrayList<String> mImageList;
 
     private EditText mTitleEdit;
     private EditText mDescEdit;
@@ -103,7 +108,7 @@ public class EditActivity extends AppCompatActivity {
                         mTitleEdit.setText(mCurNote.getTitle());
                         mDescEdit.setText(mCurNote.getDesc());
                         mImageList = mCurNote.getImages();
-                        setImageLayout(mImageList);
+                        initImageLayout(mImageList);
                     }
                     break;
             }
@@ -173,13 +178,14 @@ public class EditActivity extends AppCompatActivity {
     /**
      * 이미지 유무에 따른 이미지 영역 Layout 셋팅
      *
-     * @param images ArrayList<byte[]>
+     * @param images ArrayList<String>
      */
-    private void setImageLayout(ArrayList<byte[]> images) {
+    private void initImageLayout(ArrayList<String> images) {
         boolean hasImages = !Utils.isListEmpty(images);
         if (hasImages) {
-            for (byte[] image : images) {
-                Bitmap bitmap = Utils.byteArrayToBitmap(image);
+            for (String filePath : images) {
+                // TODO file path를 저장하도록
+                Bitmap bitmap = Utils.getImgFile(getApplicationContext(), filePath);
 
                 if (bitmap != null) {
                     addImage(bitmap);
@@ -190,6 +196,8 @@ public class EditActivity extends AppCompatActivity {
 
     /**
      * 이미지 추가 처리
+     *
+     * @param bitmap Bitmap
      */
     private void addImage(Bitmap bitmap) {
         Log.d(TAG, "addImage() called. bitmap: " + bitmap);
@@ -237,18 +245,20 @@ public class EditActivity extends AppCompatActivity {
                         Glide.with(getApplicationContext())
                                 .asBitmap()
                                 .load(url)
-                                .into(new SimpleTarget<Bitmap>() {
+                                .listener(new RequestListener<Bitmap>() {
                                     @Override
-                                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                        byte[] byteArray = Utils.bitmapToByteArray(resource);
-
-                                        if (byteArray != null) {
-                                            mImageList.add(byteArray);
-                                        }
-
-                                        addImage(resource);
+                                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                                        // FIXME 이미지 불러오기 실패시 동작
+                                        return false;
                                     }
-                                });
+
+                                    @Override
+                                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                                        // FIXME 이미지 로드 성공시 bitmap을 file로 저장하고 path를 지정하여 mImageList에 add
+                                        return false;
+                                    }
+                                })
+                                .submit();
                     } else {
                         String guide = getString(R.string.dialog_cant_load_url_image);
                         Toast.makeText(getApplicationContext(), guide, Toast.LENGTH_SHORT).show();
@@ -270,12 +280,14 @@ public class EditActivity extends AppCompatActivity {
                     try {
                         bitmap = (Bitmap) data.getExtras().get("data");
                         if (bitmap != null) {
-                            byte[] byteArray = Utils.bitmapToByteArray(bitmap);
-
-                            if (byteArray != null) {
-                                mImageList.add(byteArray);
+                            String filePath = Utils.createImgFile(getApplicationContext(), bitmap);
+                            if (filePath != null) {
+                                mImageList.add(filePath);
+                                addImage(bitmap);
+                            } else {
+                                String guide = getString(R.string.dialog_select_image_failed);
+                                Toast.makeText(getApplicationContext(), guide, Toast.LENGTH_SHORT).show();
                             }
-                            addImage(bitmap);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -283,17 +295,18 @@ public class EditActivity extends AppCompatActivity {
                     break;
 
                 case DataConst.DIALOG_SELECT_IMAGE_TYPE.GALLERY:
-                    // FIXME 이미지 가져오면서 추가 버튼과 위치가 겹침 위치 조정하도록 처리 필요.
                     try {
                         ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), data.getData());
                         bitmap = ImageDecoder.decodeBitmap(source);
                         if (bitmap != null) {
-                            byte[] byteArray = Utils.bitmapToByteArray(bitmap);
-
-                            if (byteArray != null) {
-                                mImageList.add(byteArray);
+                            String filePath = Utils.createImgFile(getApplicationContext(), bitmap);
+                            if (filePath != null) {
+                                mImageList.add(filePath);
+                                addImage(bitmap);
+                            } else {
+                                String guide = getString(R.string.dialog_select_image_failed);
+                                Toast.makeText(getApplicationContext(), guide, Toast.LENGTH_SHORT).show();
                             }
-                            addImage(bitmap);
                         }
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();

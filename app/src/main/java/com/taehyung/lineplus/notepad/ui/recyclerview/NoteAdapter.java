@@ -50,9 +50,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
             Log.d(TAG, "onBindViewHolder() curNote: " + curNote.getTitle() + " | " + curNote.getDesc() + " | " + curNote.getImages());
 
             if (!Utils.isListEmpty(curNote.getImages())) {
-                byte[] byteImage = curNote.getImages().get(0);
+                String filePath = curNote.getImages().get(0);
 
-                Bitmap bitmap = Utils.byteArrayToBitmap(byteImage);
+                Bitmap bitmap = Utils.getImgFile(mContext, filePath);
                 if (bitmap != null) {
                     holder.mImageView.setImageBitmap(bitmap);
                 }

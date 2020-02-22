@@ -142,6 +142,14 @@ public class MainActivity extends AppCompatActivity {
                 // 삭제 처리
                 if (curId != -1) {
                     try {
+                        // 이미지 파일 삭제 처리
+                        Note targetNote = mNoteViewModel.getNote(curId);
+                        if (targetNote != null && !Utils.isListEmpty(targetNote.getImages())) {
+                            for (String filePath : targetNote.getImages()) {
+                                Utils.deleteImgFile(filePath);
+                            }
+                        }
+
                         mNoteViewModel.deleteNote(curId);
                     } catch (Exception e) {
                         failedText = getString(R.string.note_delete_failed);

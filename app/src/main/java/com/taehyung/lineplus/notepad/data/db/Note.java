@@ -24,7 +24,7 @@ public class Note implements Serializable {
     private String mDesc;
 
     @ColumnInfo(name = "images")
-    private ArrayList<byte[]> mImages;
+    private ArrayList<String> mImages;
 
     public Note(String title, String desc) {
         mTitle = title;
@@ -43,7 +43,7 @@ public class Note implements Serializable {
         return mDesc;
     }
 
-    public ArrayList<byte[]> getImages() {
+    public ArrayList<String> getImages() {
         return mImages;
     }
 
@@ -55,7 +55,7 @@ public class Note implements Serializable {
         mDesc = desc;
     }
 
-    public void setImages(ArrayList<byte[]> mImages) {
+    public void setImages(ArrayList<String> mImages) {
         this.mImages = mImages;
     }
 }

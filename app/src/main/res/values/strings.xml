@@ -32,6 +32,7 @@
     <string name="dialog_select_image_url">URL에서 가져오기</string>
     <string name="dialog_select_image_url_edit">URL을 입력해주세요.</string>
     <string name="dialog_select_image_url_edit_confirm">URL 입력 완료</string>
+    <string name="dialog_select_image_failed">사진 불러오기에 실패하였습니다.</string>
     <string name="dialog_cant_load_url_image">URL을 통해 이미지를 가져오지 못했습니다.</string>
 
 

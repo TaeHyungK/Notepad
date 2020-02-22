@@ -7,6 +7,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public class DataConst {
+    public static final String FILE_PREFIX = "NOTEPAD_";
+    public static final String FILE_SUFFIX = ".png";
+
     @StringDef({
             NOTE_EXTRA.EXTRA_TITLE_DATA,
             NOTE_EXTRA.EXTRA_DESC_DATA,
