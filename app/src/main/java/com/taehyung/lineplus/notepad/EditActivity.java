@@ -159,18 +159,11 @@ public class EditActivity extends AppCompatActivity {
 
         if (DataConst.NOTE_ACTIVITY_TYPE.TYPE_ADD.equals(mType)) {
             mCurNote = new Note(mTitleEdit.getText().toString(), mDescEdit.getText().toString());
-
-            if (!Utils.isListEmpty(mImageList)) {
-                mCurNote.setImages(mImageList);
-            }
-
+            mCurNote.setImages(mImageList);
         } else if (DataConst.NOTE_ACTIVITY_TYPE.TYPE_UPDATE.equals(mType)) {
             mCurNote.setTitle(mTitleEdit.getText().toString());
             mCurNote.setDesc(mDescEdit.getText().toString());
-
-            if (!Utils.isListEmpty(mImageList)) {
-                mCurNote.setImages(mImageList);
-            }
+            mCurNote.setImages(mImageList);
         }
 
         Intent intent = new Intent();
@@ -227,7 +220,6 @@ public class EditActivity extends AppCompatActivity {
 
                     Log.d(TAG, "mDialogClickListener URL_CONFIRM_BTN url: " + url);
 
-                    // FIXME url로 이미지 불러오는 것 안됨.. 수정 필요...
                     if (url != null) {
                         Glide.with(getApplicationContext())
                                 .asBitmap()

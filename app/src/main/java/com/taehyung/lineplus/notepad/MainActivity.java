@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        Log.d(TAG, "onActivityResult:() called. " + requestCode + " | " + resultCode + " | " + intent);
+        Log.d(TAG, "onActivityResult() called. " + requestCode + " | " + resultCode + " | " + intent);
 
         if ((requestCode == ADD_NOTE_ACTIVITY_REQUEST_CODE || requestCode == UPDATE_NOTE_ACTIVITY_REQUEST_CODE)
                 && resultCode == RESULT_OK) {
