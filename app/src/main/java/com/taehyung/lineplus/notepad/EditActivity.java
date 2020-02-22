@@ -85,7 +85,7 @@ public class EditActivity extends AppCompatActivity {
         });
 
         // 첨부된 이미지 RecyclerView 셋팅
-        ImageAdapter adapter = new ImageAdapter(getApplicationContext(), mOnItemClickListener);
+        ImageAdapter adapter = new ImageAdapter(DataConst.NOTE_ACTIVITY_TYPE.TYPE_ADD, getApplicationContext(), mOnItemClickListener);
         mImageRecyclerView.setAdapter(adapter);
         mImageRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         CustomItemDecoration customItemDecoration = new CustomItemDecoration(5);

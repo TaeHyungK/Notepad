@@ -8,4 +8,7 @@
     <dimen name="edit_image_height">100dp</dimen>
     <dimen name="edit_image_remove_btn_width">40dp</dimen>
     <dimen name="edit_image_remove_btn_height">40dp</dimen>
+
+    <dimen name="detail_image_width">60dp</dimen>
+    <dimen name="detail_image_height">60dp</dimen>
 </resources>

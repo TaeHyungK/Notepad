@@ -7,23 +7,27 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.taehyung.lineplus.notepad.R;
+import com.taehyung.lineplus.notepad.data.DataConst;
 import com.taehyung.lineplus.notepad.utility.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageViewHolder> {
     private static final String TAG = ImageAdapter.class.getSimpleName();
 
+    private @DataConst.NOTE_ACTIVITY_TYPE String mType;
     private List<String> mImages;
     private Context mContext;
 
     private OnItemClickListener mOnItemClickListener;
 
-    public ImageAdapter(Context context, OnItemClickListener onItemClickListener) {
+    public ImageAdapter(@DataConst.NOTE_ACTIVITY_TYPE String type, Context context, OnItemClickListener onItemClickListener) {
+        mType = type;
         mContext = context;
         mOnItemClickListener = onItemClickListener;
     }
@@ -48,6 +52,14 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageViewHolder> {
             }
 
             holder.mRemoveBtn.setTag(R.attr.key_image_path, curImagePath);
+        }
+        switch (mType) {
+            case DataConst.NOTE_ACTIVITY_TYPE.TYPE_ADD:
+            case DataConst.NOTE_ACTIVITY_TYPE.TYPE_UPDATE:
+                holder.mRemoveBtn.setVisibility(View.VISIBLE);
+                break;
+            case DataConst.NOTE_ACTIVITY_TYPE.TYPE_DETAIL:
+                break;
         }
     }
 

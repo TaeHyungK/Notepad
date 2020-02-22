@@ -35,11 +35,13 @@ public class DataConst {
     @StringDef({
             NOTE_ACTIVITY_TYPE.TYPE_ADD,
             NOTE_ACTIVITY_TYPE.TYPE_UPDATE,
+            NOTE_ACTIVITY_TYPE.TYPE_DETAIL,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface NOTE_ACTIVITY_TYPE {
         String TYPE_ADD = "TYPE_ADD";
         String TYPE_UPDATE = "TYPE_UPDATE";
+        String TYPE_DETAIL = "TYPE_DETAIL";
     }
 
     @IntDef({

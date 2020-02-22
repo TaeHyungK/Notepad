@@ -6,6 +6,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,11 +15,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.taehyung.lineplus.notepad.MainActivity;
 import com.taehyung.lineplus.notepad.R;
 import com.taehyung.lineplus.notepad.data.DataConst;
 import com.taehyung.lineplus.notepad.data.db.Note;
+import com.taehyung.lineplus.notepad.ui.recyclerview.CustomItemDecoration;
+import com.taehyung.lineplus.notepad.ui.recyclerview.edit.ImageAdapter;
+import com.taehyung.lineplus.notepad.utility.Utils;
+
+import java.util.ArrayList;
 
 public class DetailFragment extends Fragment {
     private static final String TAG = DetailFragment.class.getSimpleName();
@@ -29,7 +37,10 @@ public class DetailFragment extends Fragment {
     private ConstraintLayout mMainlayout;
     private TextView mTitle;
     private TextView mDesc;
+    private RecyclerView mImageRecyclerView;
     private Button mCancel;
+
+    private ArrayList<String> mImageList;
 
     @Nullable
     @Override
@@ -57,9 +68,17 @@ public class DetailFragment extends Fragment {
         mMainlayout = parentView.findViewById(R.id.f_detail_main_container);
         mTitle = parentView.findViewById(R.id.f_detail_title_text);
         mDesc = parentView.findViewById(R.id.f_detail_desc_text);
+        mImageRecyclerView = parentView.findViewById(R.id.f_detail_image_recyclerview);
         mCancel = parentView.findViewById(R.id.f_detail_cancel_btn);
 
         mDesc.setMovementMethod(new ScrollingMovementMethod());
+
+        // TODO 확대 보기 지원?
+        ImageAdapter adapter = new ImageAdapter(DataConst.NOTE_ACTIVITY_TYPE.TYPE_DETAIL, getActivity(), null);
+        mImageRecyclerView.setAdapter(adapter);
+        mImageRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
+        CustomItemDecoration customItemDecoration = new CustomItemDecoration(3);
+        mImageRecyclerView.addItemDecoration(customItemDecoration);
 
         mCancel.setOnClickListener(mOnClickListener);
         mMainlayout.setOnClickListener(mOnClickListener);
@@ -80,6 +99,15 @@ public class DetailFragment extends Fragment {
 
             mTitle.setText(curNote.getTitle());
             mDesc.setText(curNote.getDesc());
+
+            mImageList = curNote.getImages();
+            if (Utils.isListEmpty(mImageList)) {
+                mImageList = new ArrayList<>();
+            }
+            if (mImageRecyclerView.getAdapter() instanceof ImageAdapter) {
+                ImageAdapter imageAdapter = (ImageAdapter) mImageRecyclerView.getAdapter();
+                imageAdapter.setImages(mImageList);
+            }
 
             new Handler().postDelayed(new Runnable() {
                 @Override
