@@ -3,4 +3,9 @@
     <dimen name="dialog_button_width">200dp</dimen>
     <dimen name="dialog_dismiss_btn_width">40dp</dimen>
     <dimen name="dialog_dismiss_btn_height">40dp</dimen>
+
+    <dimen name="edit_image_width">100dp</dimen>
+    <dimen name="edit_image_height">100dp</dimen>
+    <dimen name="edit_image_remove_btn_width">40dp</dimen>
+    <dimen name="edit_image_remove_btn_height">40dp</dimen>
 </resources>

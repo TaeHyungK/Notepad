@@ -11,9 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.taehyung.lineplus.notepad.utility.Utils;
 
-public class ItemDecoration extends DividerItemDecoration {
-    private Drawable mDivider;
-
+public class CustomDividerItemDecoration extends androidx.recyclerview.widget.DividerItemDecoration {
     /**
      * Creates a divider {@link RecyclerView.ItemDecoration} that can be used with a
      * {@link LinearLayoutManager}.
@@ -21,7 +19,7 @@ public class ItemDecoration extends DividerItemDecoration {
      * @param context     Current context, it will be used to access resources.
      * @param orientation Divider orientation. Should be {@link #HORIZONTAL} or {@link #VERTICAL}.
      */
-    public ItemDecoration(Context context, int orientation) {
+    public CustomDividerItemDecoration(Context context, int orientation) {
         super(context, orientation);
     }
 

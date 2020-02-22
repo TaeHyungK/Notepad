@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/edit_image_width"
+    android:layout_height="@dimen/edit_image_height"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ImageView
+        android:id="@+id/image_item_image"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="10dp"
+        app:layout_constraintDimensionRatio="1:1"
+        android:scaleType="fitXY"
+        android:src="@drawable/default_no_image"
+        />
+    <Button
+        android:id="@+id/image_item_remove_btn"
+        android:layout_width="@dimen/edit_image_remove_btn_width"
+        android:layout_height="@dimen/edit_image_remove_btn_height"
+        android:background="@android:drawable/ic_menu_close_clear_cancel"
+        app:layout_constraintEnd_toEndOf="@+id/image_item_image"
+        app:layout_constraintTop_toTopOf="@+id/image_item_image"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

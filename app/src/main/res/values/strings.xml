@@ -18,7 +18,8 @@
     <string name="note_add_title">메모 추가하기</string>
     <string name="note_add_title_hint">제목을 이곳에 입력해주세요 !</string>
     <string name="note_add_desc_hint">본문을 이곳에 입력해 주세요 !</string>
-    <string name="note_add_image_add">이미지\n추가하기</string>
+    <string name="note_add_image_add">이미지 추가하기</string>
+    <string name="note_add_image_remove_failed">이미지 삭제에 실패하였습니다.</string>
 
 
     <string name="note_add_cant_save_no_title_guide">제목을 입력해주세요.</string>

@@ -3,7 +3,8 @@ package com.taehyung.lineplus.notepad;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,21 +18,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.Request;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.transition.Transition;
 import com.taehyung.lineplus.notepad.data.DataConst;
 import com.taehyung.lineplus.notepad.data.db.Note;
 import com.taehyung.lineplus.notepad.ui.dialog.CustomDialog;
+import com.taehyung.lineplus.notepad.ui.recyclerview.CustomDividerItemDecoration;
+import com.taehyung.lineplus.notepad.ui.recyclerview.CustomItemDecoration;
+import com.taehyung.lineplus.notepad.ui.recyclerview.edit.ImageAdapter;
 import com.taehyung.lineplus.notepad.utility.Utils;
 
 import java.io.FileNotFoundException;
@@ -50,7 +49,7 @@ public class EditActivity extends AppCompatActivity {
 
     private EditText mTitleEdit;
     private EditText mDescEdit;
-    private LinearLayout mImageContainer;
+    private RecyclerView mImageRecyclerView;
     private Button mAddImgBtn;
 
     private CustomDialog mDialog;
@@ -62,7 +61,8 @@ public class EditActivity extends AppCompatActivity {
 
         mTitleEdit = findViewById(R.id.activity_edit_title_edit);
         mDescEdit = findViewById(R.id.activity_edit_desc_edit);
-        mImageContainer = findViewById(R.id.activity_edit_image_container);
+        mImageRecyclerView = findViewById(R.id.activity_edit_image_recyclerview);
+        mAddImgBtn = findViewById(R.id.activity_edit_image_add_btn);
 
         initLayout(getIntent());
     }
@@ -75,11 +75,7 @@ public class EditActivity extends AppCompatActivity {
     }
 
     private void initLayout(Intent intent) {
-        // Add 이미지 추가 Button
-        mAddImgBtn = new Button(this);
-        mAddImgBtn.setLayoutParams(new LinearLayout.LayoutParams(Utils.changeDP2Pixel(100), Utils.changeDP2Pixel(100)));
-        mAddImgBtn.setText(getString(R.string.note_add_image_add));
-        mAddImgBtn.setElevation(5);
+        // 이미지 추가 Button 셋팅
         mAddImgBtn.setTag(R.attr.key_add_image, DataConst.DIALOG_SELECT_IMAGE_TYPE.ADD);
         mAddImgBtn.setOnClickListener(view -> {
             if (mDialog == null) {
@@ -87,8 +83,15 @@ public class EditActivity extends AppCompatActivity {
             }
             mDialog.show();
         });
-        mImageContainer.addView(mAddImgBtn);
 
+        // 첨부된 이미지 RecyclerView 셋팅
+        ImageAdapter adapter = new ImageAdapter(getApplicationContext(), mOnItemClickListener);
+        mImageRecyclerView.setAdapter(adapter);
+        mImageRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
+        CustomItemDecoration customItemDecoration = new CustomItemDecoration(5);
+        mImageRecyclerView.addItemDecoration(customItemDecoration);
+
+        // 수정인 경우 기존 데이터 셋팅
         if (intent == null) {
             Log.d(TAG, "initLayout() intent is null. early return.");
             return;
@@ -100,7 +103,9 @@ public class EditActivity extends AppCompatActivity {
             mType = bundle.getString(MainActivity.ACTIVITY_CALL_TYPE, DataConst.NOTE_ACTIVITY_TYPE.TYPE_ADD);
             switch (mType) {
                 case DataConst.NOTE_ACTIVITY_TYPE.TYPE_ADD:
-//                    setImageLayout(null);
+                    if (Utils.isListEmpty(mImageList)) {
+                        mImageList = new ArrayList<>();
+                    }
                     break;
                 case DataConst.NOTE_ACTIVITY_TYPE.TYPE_UPDATE:
                     if (bundle.getSerializable(DataConst.NOTE_EXTRA.EXTRA_NOTE_DATA) instanceof Note) {
@@ -108,14 +113,13 @@ public class EditActivity extends AppCompatActivity {
                         mTitleEdit.setText(mCurNote.getTitle());
                         mDescEdit.setText(mCurNote.getDesc());
                         mImageList = mCurNote.getImages();
+                        if (Utils.isListEmpty(mImageList)) {
+                            mImageList = new ArrayList<>();
+                        }
                         initImageLayout(mImageList);
                     }
                     break;
             }
-        }
-
-        if (Utils.isListEmpty(mImageList)) {
-            mImageList = new ArrayList<>();
         }
     }
 
@@ -183,28 +187,11 @@ public class EditActivity extends AppCompatActivity {
     private void initImageLayout(ArrayList<String> images) {
         boolean hasImages = !Utils.isListEmpty(images);
         if (hasImages) {
-            for (String filePath : images) {
-                // TODO file path를 저장하도록
-                Bitmap bitmap = Utils.getImgFile(getApplicationContext(), filePath);
-
-                if (bitmap != null) {
-                    addImage(bitmap);
-                }
+            if (mImageRecyclerView.getAdapter() instanceof ImageAdapter) {
+                ImageAdapter imageAdapter = (ImageAdapter) mImageRecyclerView.getAdapter();
+                imageAdapter.setImages(images);
             }
         }
-    }
-
-    /**
-     * 이미지 추가 처리
-     *
-     * @param bitmap Bitmap
-     */
-    private void addImage(Bitmap bitmap) {
-        Log.d(TAG, "addImage() called. bitmap: " + bitmap);
-        ImageView imageView = new ImageView(this);
-        imageView.setLayoutParams(new ConstraintLayout.LayoutParams(Utils.changeDP2Pixel(100), Utils.changeDP2Pixel(100)));
-        imageView.setImageBitmap(bitmap);
-        mImageContainer.addView(imageView, 0);
     }
 
     private View.OnClickListener mDialogClickListener = view -> {
@@ -248,13 +235,29 @@ public class EditActivity extends AppCompatActivity {
                                 .listener(new RequestListener<Bitmap>() {
                                     @Override
                                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                                        // FIXME 이미지 불러오기 실패시 동작
+                                        e.printStackTrace();
+
+                                        String guide = getString(R.string.dialog_select_image_failed);
+                                        Toast.makeText(getApplicationContext(), guide, Toast.LENGTH_SHORT).show();
                                         return false;
                                     }
 
                                     @Override
                                     public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                                        // FIXME 이미지 로드 성공시 bitmap을 file로 저장하고 path를 지정하여 mImageList에 add
+                                        if (resource != null) {
+                                            String filePath = Utils.createImgFile(getApplicationContext(), resource);
+                                            if (filePath != null) {
+                                                // TODO 이미지 첫 로드 시 RecyclerView에 반영되지 않는 현상 수정 필요..
+                                                mImageList.add(filePath);
+                                                if (mImageRecyclerView.getAdapter() instanceof ImageAdapter) {
+                                                    ImageAdapter imageAdapter = (ImageAdapter) mImageRecyclerView.getAdapter();
+                                                    imageAdapter.setImages(mImageList);
+                                                }
+                                            } else {
+                                                String guide = getString(R.string.dialog_select_image_failed);
+                                                Toast.makeText(getApplicationContext(), guide, Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
                                         return false;
                                     }
                                 })
@@ -262,6 +265,10 @@ public class EditActivity extends AppCompatActivity {
                     } else {
                         String guide = getString(R.string.dialog_cant_load_url_image);
                         Toast.makeText(getApplicationContext(), guide, Toast.LENGTH_SHORT).show();
+                    }
+
+                    if (mDialog != null && mDialog.isShowing()) {
+                        mDialog.dismiss();
                     }
                 }
                 break;
@@ -283,7 +290,10 @@ public class EditActivity extends AppCompatActivity {
                             String filePath = Utils.createImgFile(getApplicationContext(), bitmap);
                             if (filePath != null) {
                                 mImageList.add(filePath);
-                                addImage(bitmap);
+                                if (mImageRecyclerView.getAdapter() instanceof ImageAdapter) {
+                                    ImageAdapter imageAdapter = (ImageAdapter) mImageRecyclerView.getAdapter();
+                                    imageAdapter.setImages(mImageList);
+                                }
                             } else {
                                 String guide = getString(R.string.dialog_select_image_failed);
                                 Toast.makeText(getApplicationContext(), guide, Toast.LENGTH_SHORT).show();
@@ -302,7 +312,10 @@ public class EditActivity extends AppCompatActivity {
                             String filePath = Utils.createImgFile(getApplicationContext(), bitmap);
                             if (filePath != null) {
                                 mImageList.add(filePath);
-                                addImage(bitmap);
+                                if (mImageRecyclerView.getAdapter() instanceof ImageAdapter) {
+                                    ImageAdapter imageAdapter = (ImageAdapter) mImageRecyclerView.getAdapter();
+                                    imageAdapter.setImages(mImageList);
+                                }
                             } else {
                                 String guide = getString(R.string.dialog_select_image_failed);
                                 Toast.makeText(getApplicationContext(), guide, Toast.LENGTH_SHORT).show();
@@ -316,11 +329,33 @@ public class EditActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "이미지 용량이 너무 큽니다.", Toast.LENGTH_SHORT).show();
                     }
                     break;
-                case DataConst.DIALOG_SELECT_IMAGE_TYPE.URL:
-                    // TODO glide 이용해서 URL 이미지 가져와서 셋팅 처리
-
-                    break;
             }
         }
     }
+
+    private ImageAdapter.OnItemClickListener mOnItemClickListener = (view, position) -> {
+        Object tag = view.getTag(R.attr.key_image_path);
+        String imagePath = null;
+
+        if (tag instanceof String) {
+            imagePath = (String) tag;
+        }
+
+        String failedText = "";
+        switch (view.getId()) {
+            case R.id.image_item_remove_btn:
+                if (imagePath != null) {
+                    Utils.deleteImgFile(imagePath);
+                    mImageList.remove(imagePath);
+                    if (mImageRecyclerView.getAdapter() instanceof ImageAdapter) {
+                        ImageAdapter imageAdapter = (ImageAdapter) mImageRecyclerView.getAdapter();
+                        imageAdapter.setImages(mImageList);
+                    }
+                } else {
+                    failedText = getString(R.string.note_add_image_remove_failed);
+                    Toast.makeText(getApplicationContext(), failedText, Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    };
 }

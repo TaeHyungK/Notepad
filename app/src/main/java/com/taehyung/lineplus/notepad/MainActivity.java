@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,9 +25,9 @@ import com.taehyung.lineplus.notepad.data.DataConst;
 import com.taehyung.lineplus.notepad.data.db.NoteViewModel;
 import com.taehyung.lineplus.notepad.data.db.Note;
 import com.taehyung.lineplus.notepad.ui.popup.DetailFragment;
-import com.taehyung.lineplus.notepad.ui.recyclerview.ItemDecoration;
-import com.taehyung.lineplus.notepad.ui.recyclerview.NoteAdapter;
-import com.taehyung.lineplus.notepad.ui.recyclerview.NoteViewHolder;
+import com.taehyung.lineplus.notepad.ui.recyclerview.CustomDividerItemDecoration;
+import com.taehyung.lineplus.notepad.ui.recyclerview.main.NoteAdapter;
+import com.taehyung.lineplus.notepad.ui.recyclerview.main.NoteViewHolder;
 import com.taehyung.lineplus.notepad.utility.Utils;
 
 import java.util.ArrayList;
@@ -73,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
         NoteAdapter adapter = new NoteAdapter(getApplicationContext(), mOnItemClickListener);
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        ItemDecoration itemDecoration = new ItemDecoration(this, DividerItemDecoration.VERTICAL);
-        itemDecoration.setDrawable(getDrawable(R.drawable.line_divider));
-        mRecyclerView.addItemDecoration(itemDecoration);
+        CustomDividerItemDecoration customDividerItemDecoration = new CustomDividerItemDecoration(this, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL);
+        customDividerItemDecoration.setDrawable(getDrawable(R.drawable.line_divider));
+        mRecyclerView.addItemDecoration(customDividerItemDecoration);
 
         // model provider
         mNoteViewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
@@ -114,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         Object tag = view.getTag(R.attr.key_note_holder);
         NoteViewHolder holder = null;
 
-        if (tag != null && tag instanceof NoteViewHolder) {
+        if (tag instanceof NoteViewHolder) {
             holder = (NoteViewHolder) tag;
             if (holder != null
                     && holder.itemView != null
@@ -126,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
         String failedText = "";
         switch (view.getId()) {
             case R.id.note_item_edit_btn:
-                // TODO edit 화면 진입 - DB 에서 노트 가져와서 데이터 넘겨줘야 할 듯!
                 Note curNote = mNoteViewModel.getNote(curId);
                 if (curNote != null) {
                     Intent intent = new Intent(MainActivity.this, EditActivity.class);

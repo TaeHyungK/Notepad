@@ -1,4 +1,4 @@
-package com.taehyung.lineplus.notepad.ui.recyclerview;
+package com.taehyung.lineplus.notepad.ui.recyclerview.main;
 
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +21,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
     protected Button mEditBtn;
     protected Button mRemoveBtn;
 
-    public NoteViewHolder(@NonNull View itemView, NoteAdapter.OnItemClickListener mOnItemClickListener) {
+    public NoteViewHolder(@NonNull View itemView, NoteAdapter.OnItemClickListener onItemClickListener) {
         super(itemView);
         mRootLayout = itemView.findViewById(R.id.note_item_root_layout);
         mImageView = itemView.findViewById(R.id.note_item_thumbnail);
@@ -33,8 +33,8 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         mRootLayout.setOnClickListener(view -> {
             int pos = getAdapterPosition();
             if (pos != RecyclerView.NO_POSITION) {
-                if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onItemClick(view, pos) ;
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(view, pos) ;
                 }
             }
         });
@@ -42,8 +42,8 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         mEditBtn.setOnClickListener(view -> {
             int pos = getAdapterPosition();
             if (pos != RecyclerView.NO_POSITION) {
-                if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onItemClick(view, pos) ;
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(view, pos) ;
                 }
             }
         });
@@ -51,8 +51,8 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         mRemoveBtn.setOnClickListener(view -> {
             int pos = getAdapterPosition();
             if (pos != RecyclerView.NO_POSITION) {
-                if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onItemClick(view, pos) ;
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(view, pos) ;
                 }
             }
         });

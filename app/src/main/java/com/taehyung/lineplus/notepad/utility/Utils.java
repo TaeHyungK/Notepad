@@ -85,12 +85,15 @@ public class Utils {
         return filePath;
     }
 
-    public static void deleteImgFile(String filePath) {
+    public static boolean deleteImgFile(String filePath) {
+        boolean isResult = false;
         File targetFile = new File(filePath);
 
         if (targetFile.exists()) {
-            targetFile.delete();
+            isResult = targetFile.delete();
         }
+
+        return isResult;
     }
 
     public static Bitmap getImgFile(Context context, String filePath) {

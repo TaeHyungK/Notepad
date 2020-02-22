@@ -1,8 +1,7 @@
-package com.taehyung.lineplus.notepad.ui.recyclerview;
+package com.taehyung.lineplus.notepad.ui.recyclerview.main;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +37,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         View view = LayoutInflater.from(mContext).inflate(R.layout.note_item, parent, false);
         NoteViewHolder holder = new NoteViewHolder(view, mOnItemClickListener);
 
-        Log.d(TAG, "onCreateViewHolder() " + holder.mTitle + " | " + holder.mDesc);
         return holder;
     }
 
