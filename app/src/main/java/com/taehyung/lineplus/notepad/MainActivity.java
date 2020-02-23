@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager mFragmentManager;
     private ArrayList<Fragment> mPopupFragmentList;
 
-    private boolean isUpdate;
+    private long updateId = -1L;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
                 Note update = (Note) intent.getSerializableExtra(DataConst.NOTE_EXTRA.EXTRA_NOTE_DATA);
                 try {
                     mNoteViewModel.updateNote(update);
-                    isUpdate = true;
+                    updateId = update.getId();
                 } catch (Exception e) {
                     String text = getString(R.string.note_save_failed);
                     Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
@@ -254,15 +254,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        Log.d(TAG, "onResume() called. isUpdate: " +isUpdate);
+        Log.d(TAG, "onResume() called.");
         super.onResume();
-        if (isUpdate
+
+        if (updateId != -1
                 && mRecyclerView != null
                 && mRecyclerView.getAdapter() instanceof NoteAdapter) {
             NoteAdapter adapter = (NoteAdapter) mRecyclerView.getAdapter();
-            adapter.notifyDataSetChanged();
 
-            isUpdate = false;
+            int position = adapter.getUpdatePosition(updateId);
+            adapter.notifyItemChanged(position);
+
+            updateId = -1;
         }
     }
 }

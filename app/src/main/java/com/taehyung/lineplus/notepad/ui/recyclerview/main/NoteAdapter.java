@@ -82,6 +82,20 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         notifyDataSetChanged();
     }
 
+    public int getUpdatePosition(long id) {
+        int position = -1;
+
+        for (int i = 0; i < mNotes.size(); i++) {
+            Note curNote = mNotes.get(i);
+            if (curNote.getId() == id) {
+                position = i;
+                break;
+            }
+        }
+
+        return position;
+    }
+
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
     }
