@@ -55,6 +55,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
                 Bitmap bitmap = Utils.getImgFile(mContext, filePath);
                 if (bitmap != null) {
                     holder.mImageView.setImageBitmap(bitmap);
+                } else {
+                    holder.mImageView.setImageDrawable(mContext.getDrawable(R.drawable.default_no_image));
                 }
             }
             holder.mTitle.setText(curNote.getTitle());
