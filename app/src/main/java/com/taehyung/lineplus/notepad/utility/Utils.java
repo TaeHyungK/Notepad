@@ -86,11 +86,16 @@ public class Utils {
     }
 
     public static boolean deleteImgFile(String filePath) {
+        Log.d(TAG, "deleteImgFile() called. filePath: " + filePath);
         boolean isResult = false;
         File targetFile = new File(filePath);
 
         if (targetFile.exists()) {
-            isResult = targetFile.delete();
+            try {
+                isResult = targetFile.delete();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return isResult;
@@ -103,43 +108,11 @@ public class Utils {
         Bitmap bitmap = null;
 
         if(targetFile.exists()) {
-            bitmap = BitmapFactory.decodeFile(targetFile.getAbsolutePath());
-        }
-
-        return bitmap;
-    }
-
-    public static byte[] bitmapToByteArray(Bitmap bitmap) {
-        if (bitmap == null) {
-            Log.d(TAG, "bitmapToByteArray() bitmap is null. do nothing.");
-            return null;
-        }
-
-        byte[] byteArray = null;
-
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            byteArray = baos.toByteArray();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return byteArray ;
-    }
-
-    public static Bitmap byteArrayToBitmap(byte[] byteArray) {
-        if (byteArray == null) {
-            Log.d(TAG, "byteArrayToBitmap() byteArray is null. do nothing.");
-            return null;
-        }
-
-        Bitmap bitmap = null;
-
-        try {
-            bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-        } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                bitmap = BitmapFactory.decodeFile(targetFile.getAbsolutePath());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return bitmap;

@@ -108,4 +108,22 @@ public class NoteRepository {
             }
         }.execute(id);
     }
+
+    public void updateNote(Note note) {
+        new AsyncTask<Note, Void, Integer>() {
+            @Override
+            protected Integer doInBackground(Note... notes) {
+                if (mNoteDao == null) {
+                    return -1;
+                }
+                return mNoteDao.update(notes[0]);
+            }
+
+            @Override
+            protected void onPostExecute(Integer integer) {
+                super.onPostExecute(integer);
+                Log.d(TAG, "notes : " + integer);
+            }
+        }.execute(note);
+    }
 }

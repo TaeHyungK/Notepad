@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -28,4 +29,7 @@ public interface NoteDao {
 
     @Query("DELETE FROM note WHERE mId = (:id)")
     int deleteNote(long id);
+
+    @Update
+    int update(Note note);
 }

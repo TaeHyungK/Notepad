@@ -45,7 +45,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         Log.d(TAG, "onBindViewHolder() called. position: " + position);
         if (!Utils.isListEmpty(mNotes)) {
             Note curNote = mNotes.get(position);
-            Log.d(TAG, "onBindViewHolder() curNote: " + curNote.getTitle() + " | " + curNote.getDesc() + " | " + curNote.getImages());
+            Log.d(TAG, "onBindViewHolder() curNote: " + curNote.getTitle()
+                    + " | " + curNote.getDesc()
+                    + " | " + curNote.getImages());
 
             if (!Utils.isListEmpty(curNote.getImages())) {
                 String filePath = curNote.getImages().get(0);

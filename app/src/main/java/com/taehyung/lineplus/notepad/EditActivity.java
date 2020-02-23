@@ -237,10 +237,9 @@ public class EditActivity extends AppCompatActivity {
                                     @Override
                                     public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
                                         if (resource != null) {
-                                            String filePath = Utils.createImgFile(getApplicationContext(), resource);
-                                            if (filePath != null) {
-                                                // TODO 이미지 첫 로드 시 RecyclerView에 반영되지 않는 현상 수정 필요..
-                                                mImageList.add(filePath);
+                                            String imagePath = Utils.createImgFile(getApplicationContext(), resource);
+                                            if (imagePath != null) {
+                                                mImageList.add(imagePath);
                                                 if (mImageRecyclerView.getAdapter() instanceof ImageAdapter) {
                                                     ImageAdapter imageAdapter = (ImageAdapter) mImageRecyclerView.getAdapter();
                                                     imageAdapter.setImages(mImageList);
@@ -325,6 +324,9 @@ public class EditActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Image RecyclerView item click listener
+     */
     private ImageAdapter.OnItemClickListener mOnItemClickListener = (view, position) -> {
         Object tag = view.getTag(R.attr.key_image_path);
         String imagePath = null;

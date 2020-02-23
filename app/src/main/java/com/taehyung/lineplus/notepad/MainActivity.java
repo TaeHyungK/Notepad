@@ -167,18 +167,30 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, intent);
         Log.d(TAG, "onActivityResult() called. " + requestCode + " | " + resultCode + " | " + intent);
 
-        if ((requestCode == ADD_NOTE_ACTIVITY_REQUEST_CODE || requestCode == UPDATE_NOTE_ACTIVITY_REQUEST_CODE)
-                && resultCode == RESULT_OK) {
-            if (intent != null) {
-                if (intent.getSerializableExtra(DataConst.NOTE_EXTRA.EXTRA_NOTE_DATA) instanceof Note) {
-                    Note input = (Note) intent.getSerializableExtra(DataConst.NOTE_EXTRA.EXTRA_NOTE_DATA);
-                    try {
-                        mNoteViewModel.insertNote(input);
-                    } catch (Exception e) {
-                        String text = getString(R.string.note_save_failed);
-                        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
-                    }
+        if (resultCode != RESULT_OK || intent == null) {
+            return;
+        }
+
+        if (requestCode == ADD_NOTE_ACTIVITY_REQUEST_CODE) {
+            if (intent.getSerializableExtra(DataConst.NOTE_EXTRA.EXTRA_NOTE_DATA) instanceof Note) {
+                Note input = (Note) intent.getSerializableExtra(DataConst.NOTE_EXTRA.EXTRA_NOTE_DATA);
+                try {
+                    mNoteViewModel.insertNote(input);
+                } catch (Exception e) {
+                    String text = getString(R.string.note_save_failed);
+                    Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            }
+        } else if (requestCode == UPDATE_NOTE_ACTIVITY_REQUEST_CODE) {
+            if (intent.getSerializableExtra(DataConst.NOTE_EXTRA.EXTRA_NOTE_DATA) instanceof Note) {
+                Note update = (Note) intent.getSerializableExtra(DataConst.NOTE_EXTRA.EXTRA_NOTE_DATA);
+                try {
+                    mNoteViewModel.updateNote(update);
+                } catch (Exception e) {
+                    String text = getString(R.string.note_save_failed);
+                    Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
                 }
             }
         }

@@ -1,7 +1,6 @@
 package com.taehyung.lineplus.notepad.data.db;
 
 
-import android.graphics.Bitmap;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
