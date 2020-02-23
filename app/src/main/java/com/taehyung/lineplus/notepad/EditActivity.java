@@ -237,12 +237,12 @@ public class EditActivity extends AppCompatActivity {
                                     @Override
                                     public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
                                         if (resource != null) {
-                                            String imagePath = Utils.createImgFile(getApplicationContext(), resource);
-                                            if (imagePath != null) {
-                                                mImageList.add(imagePath);
+                                            String filePath = Utils.createImgFile(getApplicationContext(), resource);
+                                            if (filePath != null) {
+                                                mImageList.add(filePath);
                                                 if (mImageRecyclerView.getAdapter() instanceof ImageAdapter) {
                                                     ImageAdapter imageAdapter = (ImageAdapter) mImageRecyclerView.getAdapter();
-                                                    imageAdapter.setImages(mImageList);
+                                                    imageAdapter.addImage(filePath);
                                                 }
                                             } else {
                                                 String guide = getString(R.string.dialog_select_image_failed);
@@ -283,7 +283,7 @@ public class EditActivity extends AppCompatActivity {
                                 mImageList.add(filePath);
                                 if (mImageRecyclerView.getAdapter() instanceof ImageAdapter) {
                                     ImageAdapter imageAdapter = (ImageAdapter) mImageRecyclerView.getAdapter();
-                                    imageAdapter.setImages(mImageList);
+                                    imageAdapter.addImage(filePath);
                                 }
                             } else {
                                 String guide = getString(R.string.dialog_select_image_failed);
@@ -305,7 +305,7 @@ public class EditActivity extends AppCompatActivity {
                                 mImageList.add(filePath);
                                 if (mImageRecyclerView.getAdapter() instanceof ImageAdapter) {
                                     ImageAdapter imageAdapter = (ImageAdapter) mImageRecyclerView.getAdapter();
-                                    imageAdapter.setImages(mImageList);
+                                    imageAdapter.addImage(filePath);
                                 }
                             } else {
                                 String guide = getString(R.string.dialog_select_image_failed);

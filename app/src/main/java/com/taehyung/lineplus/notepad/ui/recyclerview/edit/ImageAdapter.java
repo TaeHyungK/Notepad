@@ -2,6 +2,9 @@ package com.taehyung.lineplus.notepad.ui.recyclerview.edit;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,7 @@ import com.taehyung.lineplus.notepad.R;
 import com.taehyung.lineplus.notepad.data.DataConst;
 import com.taehyung.lineplus.notepad.utility.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageViewHolder> {
@@ -41,6 +45,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
+        Log.d(TAG, "onBindViewHolder() called. position: " + position);
         if (!Utils.isListEmpty(mImages)) {
             String curImagePath = mImages.get(position);
 
@@ -63,7 +68,28 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageViewHolder> {
 
     public void setImages(List<String> images) {
         mImages = images;
-        notifyDataSetChanged();
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
+    }
+
+    public void addImage(String image) {
+        if (mImages == null) {
+            mImages = new ArrayList<>();
+        }
+
+        mImages.add(0, image);
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                notifyItemInserted(0);
+            }
+        });
     }
 
     @Override
